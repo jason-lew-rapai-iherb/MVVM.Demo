@@ -2,20 +2,28 @@
 //  AppDelegate.swift
 //  MVVM.Demo
 //
-//  Created by Jason Rapai on 4/19/18.
+//  Created by Jason Lew-Rapai on 4/19/18.
 //  Copyright © 2018 Jason Lew-Rapai. All rights reserved.
 //
 
 import UIKit
+import Swinject
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
     var window: UIWindow?
+    var assembler: Assembler!
 
-
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        
+        self.assembler = Assembler.init([
+            AppAssembly(),
+        ])
+        
+        let mainCoordinator: MainCoordinator = self.assembler.resolver.resolve(MainCoordinator.self)!
+        mainCoordinator.start()
+        self.window?.rootViewController = mainCoordinator.rootNavigationController
+        
         return true
     }
 
@@ -40,7 +48,4 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
-
-
 }
-

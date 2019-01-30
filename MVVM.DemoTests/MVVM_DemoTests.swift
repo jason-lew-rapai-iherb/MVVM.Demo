@@ -2,7 +2,7 @@
 //  MVVM_DemoTests.swift
 //  MVVM.DemoTests
 //
-//  Created by Jason Rapai on 4/19/18.
+//  Created by Jason Lew-Rapai on 4/19/18.
 //  Copyright © 2018 Jason Lew-Rapai. All rights reserved.
 //
 
