@@ -9,16 +9,14 @@
 import UIKit
 
 class PartyViewModel {
-    var userName: ReadOnlyBehaviorRelay<String?>
+    var userName: ReadOnlyBehaviorRelay<String?> { return self.userService.userName }
     
-    private let userService: UserService
-    private let partyService: PartyService
+    private let userService: UserServiceProtocol
+    private let partyService: PartyServiceProtocol
     
-    init(userService: UserService, partyService: PartyService) {
+    init(userService: UserServiceProtocol, partyService: PartyServiceProtocol) {
         self.userService = userService
         self.partyService = partyService
-        
-        self.userName = ReadOnlyBehaviorRelay(self.userService.userName)
     }
     
     func getNextColor() -> UIColor {

@@ -8,7 +8,12 @@
 
 import UIKit
 
-class PartyService {
+protocol PartyServiceProtocol {
+    func getNextColor() -> UIColor
+    func getRandomEmoji() -> String
+}
+
+class PartyService: PartyServiceProtocol {
     private var colorIndex: Int = 0
     
     func getNextColor() -> UIColor {

@@ -79,15 +79,19 @@ class LoginViewController: UIViewController, DialogTransitionTarget {
             .disposed(by: self.disposeBag)
         
         self.viewModel.canLogIn
-            .throttle(0.2, scheduler: MainScheduler.instance)
-            .bind { [weak self] next in
-                self?.loginButton.isUserInteractionEnabled = next
-                if next {
-                    self?.loginButton.tintColor = UIColor.orange
+            .observeOn(MainScheduler.instance)
+            .do(onNext: { [weak self] in
+                self?.loginButton.isUserInteractionEnabled = $0
+            })
+            .map { canLogIn in
+                if canLogIn {
+                    return UIColor.orange
                 } else {
-                    self?.loginButton.tintColor = UIColor.lightGray
+                    return UIColor.lightGray
                 }
-            }.disposed(by: self.disposeBag)
+            }
+            .bind { self.loginButton.tintColor = $0 }
+            .disposed(by: self.disposeBag)
     }
     
     private func bindComponents() {

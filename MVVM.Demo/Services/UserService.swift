@@ -10,9 +10,17 @@ import Foundation
 import RxCocoa
 import RxSwift
 
-class UserService {
-    let userName: BehaviorRelay<String?> = BehaviorRelay(value: nil)
-    let password: BehaviorRelay<String?> = BehaviorRelay(value: nil)
+protocol UserServiceProtocol {
+    var userName: ReadOnlyBehaviorRelay<String?> { get }
+    var isLoggedIn: ReadOnlyBehaviorRelay<Bool> { get }
+    
+    func logIn(userName: String, password: String)
+    func logOut()
+}
+
+class UserService: UserServiceProtocol {
+    private let _userName: BehaviorRelay<String?> = BehaviorRelay(value: nil)
+    let userName: ReadOnlyBehaviorRelay<String?>
     
     private let _isLoggedIn: BehaviorRelay<Bool> = BehaviorRelay(value: false)
     let isLoggedIn: ReadOnlyBehaviorRelay<Bool>
@@ -20,19 +28,24 @@ class UserService {
     private let disposeBag: DisposeBag
     
     init() {
+        self.userName = ReadOnlyBehaviorRelay(self._userName)
         self.isLoggedIn = ReadOnlyBehaviorRelay(self._isLoggedIn)
         
         self.disposeBag = DisposeBag()
         
-        Observable.combineLatest(
-            self.userName.asObservable(),
-            self.password.asObservable())
-            .subscribe(onNext: { [weak self] (userName, password) in
-                if let userName = userName, let password = password {
-                    self?._isLoggedIn.accept(!userName.isEmpty && !password.isEmpty)
-                } else {
-                    self?._isLoggedIn.accept(false)
-                }
-            }).disposed(by: self.disposeBag)
+        self._userName
+            .map { userName in
+                return !userName.isNilOrEmpty
+            }
+            .subscribe(onNext: self._isLoggedIn.accept)
+            .disposed(by: self.disposeBag)
+    }
+    
+    func logIn(userName: String, password: String) {
+        self._userName.accept(userName)
+    }
+    
+    func logOut() {
+        self._userName.accept(nil)
     }
 }

@@ -14,19 +14,17 @@ protocol LaunchScreenViewModelDelegate: class {
 }
 
 class LaunchScreenViewModel {
-    private let userService: UserService
-    private let partyService: PartyService
+    private let userService: UserServiceProtocol
+    private let partyService: PartyServiceProtocol
     
-    private weak var delegate: LaunchScreenViewModelDelegate?
+    private(set) weak var delegate: LaunchScreenViewModelDelegate?
     
-    var userName: ReadOnlyBehaviorRelay<String?>
+    var userName: ReadOnlyBehaviorRelay<String?> { return self.userService.userName }
     var isUserLoggedIn: ReadOnlyBehaviorRelay<Bool> { return self.userService.isLoggedIn }
     
-    init(userService: UserService, partyService: PartyService) {
+    init(userService: UserServiceProtocol, partyService: PartyServiceProtocol) {
         self.userService = userService
         self.partyService = partyService
-        
-        self.userName = ReadOnlyBehaviorRelay(self.userService.userName)
     }
     
     func setup(delegate: LaunchScreenViewModelDelegate?) -> Self {
@@ -35,8 +33,7 @@ class LaunchScreenViewModel {
     }
     
     func logUserOut() {
-        self.userService.userName.accept(nil)
-        self.userService.password.accept(nil)
+        self.userService.logOut()
     }
     
     func getNextColor() -> UIColor {

@@ -21,30 +21,30 @@ class AppAssembly: Assembly {
             return NavigationControllerTransitionManager()
         }.inObjectScope(.container)
         
-        container.register(PartyService.self) { r in
+        container.register(PartyServiceProtocol.self) { r in
             return PartyService()
         }.inObjectScope(.transient)
         
-        container.register(UserService.self) { r in
+        container.register(UserServiceProtocol.self) { r in
             return UserService()
         }.inObjectScope(.container)
         
         // MARK: ViewModels
         container.register(LaunchScreenViewModel.self) { r in
             return LaunchScreenViewModel(
-                userService: r.resolve(UserService.self)!,
-                partyService: r.resolve(PartyService.self)!)
+                userService: r.resolve(UserServiceProtocol.self)!,
+                partyService: r.resolve(PartyServiceProtocol.self)!)
         }.inObjectScope(.transient)
         
         container.register(LoginViewModel.self) { r in
             return LoginViewModel(
-                userService: r.resolve(UserService.self)!)
+                userService: r.resolve(UserServiceProtocol.self)!)
         }.inObjectScope(.transient)
         
         container.register(PartyViewModel.self) { r in
             return PartyViewModel(
-                userService: r.resolve(UserService.self)!,
-                partyService: r.resolve(PartyService.self)!)
+                userService: r.resolve(UserServiceProtocol.self)!,
+                partyService: r.resolve(PartyServiceProtocol.self)!)
         }.inObjectScope(.transient)
     }
 }

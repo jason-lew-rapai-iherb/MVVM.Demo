@@ -11,13 +11,13 @@ import RxSwift
 import RxCocoa
 
 class LoginViewModel {
-    private let userService: UserService
+    private let userService: UserServiceProtocol
     
     let userName: BehaviorRelay<String?> = BehaviorRelay(value: nil)
     let password: BehaviorRelay<String?> = BehaviorRelay(value: nil)
     let canLogIn: Observable<Bool>
     
-    init(userService: UserService) {
+    init(userService: UserServiceProtocol) {
         self.userService = userService
         
         self.canLogIn = Observable.combineLatest(
@@ -29,7 +29,7 @@ class LoginViewModel {
     }
     
     func submitLoginInformation() {
-        self.userService.userName.accept(self.userName.value)
-        self.userService.password.accept(self.password.value)
+        guard let userName = self.userName.value, let password = self.password.value else { return }
+        self.userService.logIn(userName: userName, password: password)
     }
 }

@@ -41,7 +41,7 @@ class MainCoordinator: Coordinator {
 
 extension MainCoordinator: LaunchScreenViewModelDelegate {
     func launchScreenViewModelDidLaunchLogIn(_ source: LaunchScreenViewModel) {
-        let userService: UserService = self.resolver.resolve(UserService.self)!
+        let userService: UserServiceProtocol = self.resolver.resolve(UserServiceProtocol.self)!
         let viewController: LoginViewController = LoginViewController.instantiate(
             viewModel: self.resolver.resolve(LoginViewModel.self)!,
             completion: {
