@@ -9,8 +9,8 @@
 import UIKit
 
 class TransitionManager: NSObject, UIViewControllerAnimatedTransitioning, UIViewControllerTransitioningDelegate {
-    var transitionDuration: TransitionSpeed!
-    var isPresenting: Bool = false
+    private(set) var transitionDuration: TransitionSpeed!
+    private(set) var isPresenting: Bool = false
     
     func beforeViewDidLoad(transitionDuration: TransitionSpeed = .default) {
         self.transitionDuration = transitionDuration

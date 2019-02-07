@@ -23,10 +23,6 @@ public class ReadOnlyBehaviorRelay<Element> {
         self._relay = relay
     }
     
-    public func subscribe<O: ObserverType>(_ observer: O) -> Disposable where O.E == E {
-        return self._relay.subscribe(observer)
-    }
-    
     public func asObservable() -> Observable<Element> {
         return self._relay.asObservable()
     }

@@ -28,8 +28,7 @@ class PartyService: PartyServiceProtocol {
         case 3: color = UIColor.green
         case 4: color = UIColor.blue
         case 5: color = UIColor.purple
-        default:
-            color = UIColor.black
+        default: color = UIColor.black
         }
         self.colorIndex = self.colorIndex + 1
         return color
