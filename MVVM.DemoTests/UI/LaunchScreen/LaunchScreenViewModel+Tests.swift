@@ -42,13 +42,25 @@ class LaunchScreenViewModel_when_initialized: LaunchScreenViewModel_Test {
     func test_then_target_delegate_is_nil() {
         XCTAssertNil(self.target.delegate)
     }
+}
+
+class LaunchScreenViewModel_when_initialized_and_user_is_logged_out: LaunchScreenViewModel_Test {
+    func test_then_logInButtonText_is_expected() throws {
+        XCTAssertEqual(try self.target.logInButtonText.toBlocking().first(), "Faux Login")
+    }
+}
+
+class LaunchScreenViewModel_when_initialized_and_user_is_logged_in: LaunchScreenViewModel_Test {
+    var expectedUserName: String?
     
-    func test_then_userName_is_userService_userName() {
-        XCTAssert(self.target.userName === self.mockUserService.userName)
+    override func setUp() {
+        super.setUp()
+        self.expectedUserName = self.mockUserService.userName.value
+        self.mockUserService.isLoggedInMockValue.accept(true)
     }
     
-    func test_then_isUserLoggedIn_is_userService_isLoggedIn() {
-        XCTAssert(self.target.isUserLoggedIn === self.mockUserService.isLoggedIn)
+    func test_then_logInButtonText_is_expected() throws {
+        XCTAssertEqual(try self.target.logInButtonText.toBlocking().first(), "Faux Log Out \(self.expectedUserName ?? String.empty)")
     }
 }
 
@@ -69,6 +81,42 @@ class LaunchScreenViewModel_when_setup_is_called: LaunchScreenViewModel_Test {
     
     func test_then_delegate_is_mockDelegate() {
         XCTAssertTrue(self.target.delegate === self.mockDelegate)
+    }
+}
+
+class LaunchScreenViewModel_when_logInOutButtonTapped: LaunchScreenViewModel_Test {
+    var mockDelegate: MockLaunchScreenViewModelDelegate!
+    var userServiceLogOutCallCount: Int = 0
+    var launchScreenViewModelDidLaunchLogInCallCount: Int = 0
+    
+    override func setUp() {
+        super.setUp()
+        
+        self.mockUserService.logOutTestClosure = {
+            self.userServiceLogOutCallCount = self.userServiceLogOutCallCount + 1
+        }
+        
+        self.mockDelegate = MockLaunchScreenViewModelDelegate()
+        self.mockDelegate.launchScreenViewModelDidLaunchLogInTestClosure = {
+            self.launchScreenViewModelDidLaunchLogInCallCount = self.launchScreenViewModelDidLaunchLogInCallCount + 1
+        }
+        
+        let _ = self.target
+            .setup(delegate: self.mockDelegate)
+    }
+    
+    func test_and_userService_isLoggedIn_is_false_then_delegate_launchScreenViewModelDidLaunchLogIn_is_called_once() {
+        self.mockUserService.isLoggedInMockValue.accept(false)
+        self.target.logInOutButtonTapped()
+        XCTAssert(self.launchScreenViewModelDidLaunchLogInCallCount == 1)
+        XCTAssert(self.userServiceLogOutCallCount == 0)
+    }
+    
+    func test_and_userService_isLoggedIn_is_true_then_userService_called_logout_once() {
+        self.mockUserService.isLoggedInMockValue.accept(true)
+        self.target.logInOutButtonTapped()
+        XCTAssert(self.launchScreenViewModelDidLaunchLogInCallCount == 0)
+        XCTAssert(self.userServiceLogOutCallCount == 1)
     }
 }
 

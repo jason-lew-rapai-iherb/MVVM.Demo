@@ -52,26 +52,19 @@ class LaunchScreenViewController: UIViewController {
     }
     
     private func bindViewModel() {
-        self.viewModel.isUserLoggedIn.asObservable().subscribe(onNext: { [weak self] next in
-            let loginText: String = next
-                ? "Faux Log Out \(self?.viewModel.userName.value ?? String.empty)"
-                : "Faux Login"
-            self?.loginButton.setTitle(loginText, for: UIControl.State())
-        }).disposed(by: self.disposeBag)
+        self.viewModel.logInButtonText
+            .drive(self.loginButton.rx.title())
+            .disposed(by: self.disposeBag)
     }
     
     private func bindComponents() {
-        self.loginButton.rx.tap.bind {
-            if self.viewModel.isUserLoggedIn.value {
-                self.viewModel.logUserOut()
-            } else {
-                self.viewModel.launchLogIn()
-            }
-        }.disposed(by: self.disposeBag)
+        self.loginButton.rx.tap
+            .subscribe(onNext: self.viewModel.logInOutButtonTapped)
+            .disposed(by: self.disposeBag)
         
-        self.partyButton.rx.tap.bind {
-            self.viewModel.launchParty()
-        }.disposed(by: self.disposeBag)
+        self.partyButton.rx.tap
+            .subscribe(onNext: self.viewModel.launchParty)
+            .disposed(by: self.disposeBag)
         
         Observable<Int>
             .interval(0.5, scheduler: MainScheduler.instance)

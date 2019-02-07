@@ -20,6 +20,10 @@
 		A96870E8220BAFB300956B3B /* PartyService+Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96870E7220BAFB300956B3B /* PartyService+Tests.swift */; };
 		A96870EA220BB4BD00956B3B /* UserService+Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96870E9220BB4BD00956B3B /* UserService+Tests.swift */; };
 		A96870ED220BB6D100956B3B /* TransitionManageable+Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96870EC220BB6D100956B3B /* TransitionManageable+Tests.swift */; };
+		A96870EF220C9EBF00956B3B /* UIView+ShadowDepth+Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96870EE220C9EBF00956B3B /* UIView+ShadowDepth+Tests.swift */; };
+		A96870F1220CAC3C00956B3B /* AppAssembly+Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96870F0220CAC3C00956B3B /* AppAssembly+Tests.swift */; };
+		A96870F5220CC4B100956B3B /* TransitionSpeed+Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96870F4220CC4B100956B3B /* TransitionSpeed+Tests.swift */; };
+		A96870F7220CC5EC00956B3B /* NavigationControllerTransitionManager+Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96870F6220CC5EC00956B3B /* NavigationControllerTransitionManager+Tests.swift */; };
 		CD476C9F2089171D005CE83C /* Cartfile in Resources */ = {isa = PBXBuildFile; fileRef = CD476C9E2089171D005CE83C /* Cartfile */; };
 		CD476CA120891875005CE83C /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD476CA020891875005CE83C /* RxSwift.framework */; };
 		CD476CA220891875005CE83C /* RxSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CD476CA020891875005CE83C /* RxSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -103,6 +107,10 @@
 		A96870E7220BAFB300956B3B /* PartyService+Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PartyService+Tests.swift"; sourceTree = "<group>"; };
 		A96870E9220BB4BD00956B3B /* UserService+Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserService+Tests.swift"; sourceTree = "<group>"; };
 		A96870EC220BB6D100956B3B /* TransitionManageable+Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TransitionManageable+Tests.swift"; sourceTree = "<group>"; };
+		A96870EE220C9EBF00956B3B /* UIView+ShadowDepth+Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+ShadowDepth+Tests.swift"; sourceTree = "<group>"; };
+		A96870F0220CAC3C00956B3B /* AppAssembly+Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppAssembly+Tests.swift"; sourceTree = "<group>"; };
+		A96870F4220CC4B100956B3B /* TransitionSpeed+Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TransitionSpeed+Tests.swift"; sourceTree = "<group>"; };
+		A96870F6220CC5EC00956B3B /* NavigationControllerTransitionManager+Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NavigationControllerTransitionManager+Tests.swift"; sourceTree = "<group>"; };
 		CD476C9E2089171D005CE83C /* Cartfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Cartfile; sourceTree = "<group>"; };
 		CD476CA020891875005CE83C /* RxSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxSwift.framework; path = Carthage/Build/iOS/RxSwift.framework; sourceTree = "<group>"; };
 		CD476CA420891888005CE83C /* RxCocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxCocoa.framework; path = Carthage/Build/iOS/RxCocoa.framework; sourceTree = "<group>"; };
@@ -237,6 +245,7 @@
 				A96870E3220BAADE00956B3B /* EmptyableOptional+Tests.swift */,
 				A96870E5220BAC7200956B3B /* ReadOnlyBehaviorRelay+Tests.swift */,
 				A96870E1220BA9AC00956B3B /* String+Extensions+Tests.swift */,
+				A96870EE220C9EBF00956B3B /* UIView+ShadowDepth+Tests.swift */,
 			);
 			path = "Extensions&Utilities";
 			sourceTree = "<group>";
@@ -245,6 +254,8 @@
 			isa = PBXGroup;
 			children = (
 				A96870EC220BB6D100956B3B /* TransitionManageable+Tests.swift */,
+				A96870F4220CC4B100956B3B /* TransitionSpeed+Tests.swift */,
+				A96870F6220CC5EC00956B3B /* NavigationControllerTransitionManager+Tests.swift */,
 			);
 			path = Transitions;
 			sourceTree = "<group>";
@@ -387,6 +398,7 @@
 				A96870CE220B791000956B3B /* Services */,
 				A96870CA220B77C400956B3B /* UI */,
 				A96870CF220B792700956B3B /* Mocks */,
+				A96870F0220CAC3C00956B3B /* AppAssembly+Tests.swift */,
 				CDFC0CC92089146200099B18 /* MVVM_DemoTests.swift */,
 				CDFC0CCB2089146200099B18 /* Info.plist */,
 			);
@@ -615,18 +627,22 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A96870EF220C9EBF00956B3B /* UIView+ShadowDepth+Tests.swift in Sources */,
 				A96870EA220BB4BD00956B3B /* UserService+Tests.swift in Sources */,
 				A96870D4220B796D00956B3B /* MockPartyService.swift in Sources */,
 				A96870DF220BA71300956B3B /* PartyViewModel+Tests.swift in Sources */,
+				A96870F7220CC5EC00956B3B /* NavigationControllerTransitionManager+Tests.swift in Sources */,
 				A96870E2220BA9AC00956B3B /* String+Extensions+Tests.swift in Sources */,
 				A96870D2220B794B00956B3B /* MockUserService.swift in Sources */,
 				A96870E8220BAFB300956B3B /* PartyService+Tests.swift in Sources */,
 				A96870E6220BAC7200956B3B /* ReadOnlyBehaviorRelay+Tests.swift in Sources */,
 				A96870DC220B8D3D00956B3B /* LoginViewModel+Tests.swift in Sources */,
 				CDFC0CCA2089146200099B18 /* MVVM_DemoTests.swift in Sources */,
+				A96870F5220CC4B100956B3B /* TransitionSpeed+Tests.swift in Sources */,
 				A96870CD220B77E700956B3B /* LaunchScreenViewModel+Tests.swift in Sources */,
 				A96870ED220BB6D100956B3B /* TransitionManageable+Tests.swift in Sources */,
 				A96870E4220BAADE00956B3B /* EmptyableOptional+Tests.swift in Sources */,
+				A96870F1220CAC3C00956B3B /* AppAssembly+Tests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

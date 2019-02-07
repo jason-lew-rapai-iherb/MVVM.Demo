@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
 
 protocol LaunchScreenViewModelDelegate: class {
     func launchScreenViewModelDidLaunchLogIn(_ source: LaunchScreenViewModel)
@@ -19,17 +21,34 @@ class LaunchScreenViewModel {
     
     private(set) weak var delegate: LaunchScreenViewModelDelegate?
     
-    var userName: ReadOnlyBehaviorRelay<String?> { return self.userService.userName }
-    var isUserLoggedIn: ReadOnlyBehaviorRelay<Bool> { return self.userService.isLoggedIn }
+    let logInButtonText: Driver<String>
     
     init(userService: UserServiceProtocol, partyService: PartyServiceProtocol) {
         self.userService = userService
         self.partyService = partyService
+        
+        self.logInButtonText = Observable.combineLatest(
+            self.userService.userName.asObservable(),
+            self.userService.isLoggedIn.asObservable())
+            .map { userName, isLoggedIn in
+                return isLoggedIn
+                    ? "Faux Log Out \(userName ?? String.empty)"
+                    : "Faux Login"
+            }
+            .asDriver(onErrorJustReturn: String.empty)
     }
     
     func setup(delegate: LaunchScreenViewModelDelegate?) -> Self {
         self.delegate = delegate
         return self
+    }
+    
+    func logInOutButtonTapped() {
+        if self.userService.isLoggedIn.value {
+            logUserOut()
+        } else {
+            launchLogIn()
+        }
     }
     
     func logUserOut() {
