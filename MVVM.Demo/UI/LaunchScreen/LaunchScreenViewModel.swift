@@ -27,12 +27,15 @@ class LaunchScreenViewModel {
         self.userService = userService
         self.partyService = partyService
         
+        let userName: Observable<String> = self.userService.userName.asObservable()
+            .map { $0 ?? String.empty }
+        
         self.logInButtonText = Observable.combineLatest(
-            self.userService.userName.asObservable(),
+            userName,
             self.userService.isLoggedIn.asObservable())
             .map { userName, isLoggedIn in
                 return isLoggedIn
-                    ? "Faux Log Out \(userName ?? String.empty)"
+                    ? "Faux Log Out \(userName)"
                     : "Faux Login"
             }
             .asDriver(onErrorJustReturn: String.empty)
