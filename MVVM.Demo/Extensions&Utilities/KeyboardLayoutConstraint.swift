@@ -78,10 +78,7 @@ public class KeyboardLayoutConstraint: NSLayoutConstraint {
 
 class TabBarContainedKeyboardLayoutConstraint: KeyboardLayoutConstraint {
   override func updateConstant() {
-    var safeAreaOffset: CGFloat = 0.0
-    if #available(iOS 11.0, *) {
-      safeAreaOffset = UIApplication.shared.keyWindow?.safeAreaInsets.bottom ?? 0.0
-    }
+    var safeAreaOffset: CGFloat = UIApplication.shared.keyWindow?.safeAreaInsets.bottom ?? 0.0
     self.constant = self.offset + self.keyboardVisibleHeight - safeAreaOffset
   }
 }
