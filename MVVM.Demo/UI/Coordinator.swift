@@ -10,5 +10,5 @@ import UIKit
 
 protocol Coordinator: class {
     var rootNavigationController: UINavigationController! { get }
-    func start()
+    @discardableResult func start() -> UINavigationController
 }

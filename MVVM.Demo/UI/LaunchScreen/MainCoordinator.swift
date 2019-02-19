@@ -19,7 +19,7 @@ class MainCoordinator: Coordinator {
         self.navigationControllerTransitionManager = resolver.resolve(NavigationControllerTransitionManager.self)!
     }
     
-    func start() {
+    func start() -> UINavigationController {
         if self.rootNavigationController == nil {
             self.rootNavigationController = UINavigationController()
             self.rootNavigationController.navigationBar.isTranslucent = true
@@ -30,6 +30,8 @@ class MainCoordinator: Coordinator {
         let viewController: LaunchScreenViewController = LaunchScreenViewController.instantiate(
             viewModel: viewModel)
         self.rootNavigationController.viewControllers = [viewController]
+        
+        return self.rootNavigationController
     }
     
     private func launchParty() {
