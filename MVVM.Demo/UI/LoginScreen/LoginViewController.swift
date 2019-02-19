@@ -79,18 +79,9 @@ class LoginViewController: UIViewController, DialogTransitionTarget {
             .disposed(by: self.disposeBag)
         
         self.viewModel.canLogIn
-            .observeOn(MainScheduler.instance)
-            .do(onNext: { [weak self] in
-                self?.loginButton.isUserInteractionEnabled = $0
-            })
-            .map { canLogIn in
-                if canLogIn {
-                    return UIColor.orange
-                } else {
-                    return UIColor.lightGray
-                }
-            }
-            .bind { self.loginButton.tintColor = $0 }
+            .do(onNext: { [weak self] in self?.loginButton.isUserInteractionEnabled = $0 })
+            .map { $0 ? UIColor.orange : UIColor.lightGray }
+            .drive(onNext: { self.loginButton.tintColor = $0 })
             .disposed(by: self.disposeBag)
     }
     

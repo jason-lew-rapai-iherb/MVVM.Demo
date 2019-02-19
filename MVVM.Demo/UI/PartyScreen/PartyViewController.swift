@@ -36,14 +36,8 @@ class PartyViewController: UIViewController, TransitionManageable {
         
         self.disposeBag = DisposeBag()
         
-        self.viewModel.userName.asObservable()
-            .map { userName -> String in
-                if let userName = userName {
-                    return "Party on, \(userName)!"
-                }
-                return "Welcome, mysterious stranger"
-            }
-            .bind(to: self.rx.title)
+        self.viewModel.title
+            .drive(self.rx.title)
             .disposed(by: self.disposeBag)
         
         Observable<Int>

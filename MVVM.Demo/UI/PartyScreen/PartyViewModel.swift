@@ -7,12 +7,24 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
 
 class PartyViewModel {
-    var userName: ReadOnlyBehaviorRelay<String?> { return self.userService.userName }
-    
     private let userService: UserServiceProtocol
     private let partyService: PartyServiceProtocol
+    
+    var title: Driver<String> {
+        return self.userService.userName
+            .asObservable()
+            .asDriver(onErrorJustReturn: nil)
+            .map { userName -> String in
+                if let userName = userName {
+                    return "Party on, \(userName)!"
+                }
+                return "Welcome, mysterious stranger"
+            }
+    }
     
     init(userService: UserServiceProtocol, partyService: PartyServiceProtocol) {
         self.userService = userService

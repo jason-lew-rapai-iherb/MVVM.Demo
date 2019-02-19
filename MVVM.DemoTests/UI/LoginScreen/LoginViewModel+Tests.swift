@@ -20,7 +20,7 @@ class LoginViewModel_Test: XCTestCase {
     override func setUp() {
         super.setUp()
         
-        self.mockUserService = MockUserService()
+        self.mockUserService = MockUserService(isLoggedIn: false)
         
         self.target = LoginViewModel(userService: self.mockUserService)
     }
@@ -61,7 +61,7 @@ class LoginViewModel_when_userName_is_valid_and_no_password_is_entered: LoginVie
         let canLogIn = scheduler.createObserver(Bool.self)
         
         self.target.canLogIn
-            .bind(to: canLogIn)
+            .drive(canLogIn)
             .disposed(by: self.disposeBag)
         
         self.scheduler.start()
@@ -94,7 +94,7 @@ class LoginViewModel_when_no_userName_is_entered_and_password_is_valid: LoginVie
         let canLogIn = scheduler.createObserver(Bool.self)
         
         self.target.canLogIn
-            .bind(to: canLogIn)
+            .drive(canLogIn)
             .disposed(by: self.disposeBag)
         
         self.scheduler.start()
@@ -132,7 +132,7 @@ class LoginViewModel_when_userName_is_valid_and_password_is_valid: LoginViewMode
         let canLogIn = scheduler.createObserver(Bool.self)
         
         self.target.canLogIn
-            .bind(to: canLogIn)
+            .drive(canLogIn)
             .disposed(by: self.disposeBag)
         
         self.scheduler.start()

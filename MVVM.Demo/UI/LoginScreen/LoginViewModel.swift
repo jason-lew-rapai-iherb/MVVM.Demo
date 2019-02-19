@@ -15,7 +15,7 @@ class LoginViewModel {
     
     let userName: BehaviorRelay<String?> = BehaviorRelay(value: nil)
     let password: BehaviorRelay<String?> = BehaviorRelay(value: nil)
-    let canLogIn: Observable<Bool>
+    let canLogIn: Driver<Bool>
     
     init(userService: UserServiceProtocol) {
         self.userService = userService
@@ -26,6 +26,7 @@ class LoginViewModel {
                 guard let userName = userName, let password = password else { return false }
                 return userName.count > 0 && password.count > 0
             }
+            .asDriver(onErrorJustReturn: false)
     }
     
     func submitLoginInformation() {

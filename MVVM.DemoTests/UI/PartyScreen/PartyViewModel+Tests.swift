@@ -17,18 +17,38 @@ class PartyViewModel_Test: XCTestCase {
     override func setUp() {
         super.setUp()
         
-        self.mockUserService = MockUserService()
+        self.mockUserService = getMockUserService()
         self.mockPartyService = MockPartyService()
         
         self.target = PartyViewModel(
             userService: self.mockUserService,
             partyService: self.mockPartyService)
     }
+    
+    func getMockUserService() -> MockUserService {
+        return MockUserService(isLoggedIn: false)
+    }
 }
 
-class PartyViewModel_when_initialized: PartyViewModel_Test {
-    func test_userName_is_userService_userName() {
-        XCTAssert(self.target.userName === self.mockUserService.userName)
+class PartyViewModel_when_initialized_and_not_logged_in: PartyViewModel_Test {
+    let expectedTitle: String = "Welcome, mysterious stranger"
+    
+    func test_title_is_expected() throws {
+        XCTAssertEqual(try self.target.title.toBlocking().first(), self.expectedTitle)
+    }
+}
+
+class PartyViewModel_when_initialized_and_is_logged_in: PartyViewModel_Test {
+    var expectedTitle: String {
+        return "Party on, \(self.mockUserService.userName.value!)!"
+    }
+    
+    override func getMockUserService() -> MockUserService {
+        return MockUserService(isLoggedIn: true)
+    }
+    
+    func test_title_is_expected() throws {
+        XCTAssertEqual(try self.target.title.toBlocking().first(), self.expectedTitle)
     }
 }
 

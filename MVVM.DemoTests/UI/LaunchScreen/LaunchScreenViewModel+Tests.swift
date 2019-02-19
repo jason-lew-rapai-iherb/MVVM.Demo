@@ -29,7 +29,7 @@ class LaunchScreenViewModel_Test: XCTestCase {
     override func setUp() {
         super.setUp()
         
-        self.mockUserService = MockUserService()
+        self.mockUserService = MockUserService(isLoggedIn: false)
         self.mockPartyService = MockPartyService()
     
         self.target = LaunchScreenViewModel(
