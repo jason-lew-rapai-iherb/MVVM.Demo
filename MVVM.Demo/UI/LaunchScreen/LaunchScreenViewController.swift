@@ -59,11 +59,11 @@ class LaunchScreenViewController: UIViewController {
     
     private func bindComponents() {
         self.loginButton.rx.tap
-            .subscribe(onNext: self.viewModel.logInOutButtonTapped)
+            .bind(to: self.viewModel.logInOutButtonTapped)
             .disposed(by: self.disposeBag)
         
         self.partyButton.rx.tap
-            .subscribe(onNext: self.viewModel.launchParty)
+            .bind(to: self.viewModel.launchParty)
             .disposed(by: self.disposeBag)
         
         Observable<Int>

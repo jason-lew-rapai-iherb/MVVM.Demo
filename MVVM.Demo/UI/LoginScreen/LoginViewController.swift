@@ -24,13 +24,11 @@ class LoginViewController: UIViewController, DialogTransitionTarget {
     private(set) var transitionManager: TransitionManager?
     
     private var viewModel: LoginViewModel!
-    private var completion: (() -> Void)?
     private var disposeBag: DisposeBag!
     
-    class func instantiate(viewModel: LoginViewModel, completion: (() -> Void)?) -> LoginViewController {
+    class func instantiate(viewModel: LoginViewModel) -> LoginViewController {
         let viewController: LoginViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "LoginViewController") as! LoginViewController
         viewController.viewModel = viewModel
-        viewController.completion = completion
         
         let transitionManager: DialogTransitionManager = DialogTransitionManager()
         transitionManager.beforeViewDidLoad(target: viewController, transitionDuration: .dialogMedium)
@@ -60,7 +58,8 @@ class LoginViewController: UIViewController, DialogTransitionTarget {
     
     private func bindViewModel() {
         self.viewModel.userName
-            .bind(to: self.userNameTextField.rx.text)
+            .asDriver(onErrorJustReturn: nil)
+            .drive(self.userNameTextField.rx.text)
             .disposed(by: self.disposeBag)
         
         self.viewModel.password
@@ -75,7 +74,8 @@ class LoginViewController: UIViewController, DialogTransitionTarget {
                     return nil
                 }
             }
-            .bind(to: self.passwordTextField.rx.text)
+            .asDriver(onErrorJustReturn: nil)
+            .drive(self.passwordTextField.rx.text)
             .disposed(by: self.disposeBag)
         
         self.viewModel.canLogIn
@@ -88,24 +88,26 @@ class LoginViewController: UIViewController, DialogTransitionTarget {
     private func bindComponents() {
         self.userNameTextField.rx.controlEvent(.editingChanged)
             .debounce(0.3, scheduler: MainScheduler.instance)
-            .map { self.userNameTextField.text }
+            .withLatestFrom(self.userNameTextField.rx.text)
             .bind(to: self.viewModel.userName)
             .disposed(by: self.disposeBag)
         
         self.passwordTextField.rx.controlEvent(.editingChanged)
-            .map { self.passwordTextField.text }
+            .withLatestFrom(self.passwordTextField.rx.text)
             .bind(to: self.viewModel.password)
             .disposed(by: self.disposeBag)
         
         self.cancelButton.rx.tap
-            .bind { [weak self] in
-                self?.dismiss(animated: true, completion: nil)
-            }.disposed(by: self.disposeBag)
+            .bind { [weak self] in self?.dismiss(animated: true, completion: nil) }
+            .disposed(by: self.disposeBag)
         
         self.loginButton.rx.tap
             .bind { [weak self] in
-                self?.viewModel.submitLoginInformation()
-                self?.dismiss(animated: true, completion: self?.completion)
-            }.disposed(by: self.disposeBag)
+                self?.viewModel.submitLogInCredentials.accept(())
+                self?.dismiss(animated: true) {
+                    self?.viewModel.didLogLogIn.accept(())
+                }
+            }
+            .disposed(by: self.disposeBag)
     }
 }

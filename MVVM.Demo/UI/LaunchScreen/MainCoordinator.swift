@@ -25,6 +25,7 @@ class MainCoordinator: Coordinator {
             self.rootNavigationController.navigationBar.isTranslucent = true
             self.rootNavigationController.delegate = self.navigationControllerTransitionManager
         }
+        
         let viewModel: LaunchScreenViewModel = self.resolver.resolve(LaunchScreenViewModel.self)!
             .setup(delegate: self)
         let viewController: LaunchScreenViewController = LaunchScreenViewController.instantiate(
@@ -43,21 +44,23 @@ class MainCoordinator: Coordinator {
 
 extension MainCoordinator: LaunchScreenViewModelDelegate {
     func launchScreenViewModelDidLaunchLogIn(_ source: LaunchScreenViewModel) {
-        let userService: UserServiceProtocol = self.resolver.resolve(UserServiceProtocol.self)!
         let viewController: LoginViewController = LoginViewController.instantiate(
-            viewModel: self.resolver.resolve(LoginViewModel.self)!,
-            completion: {
-                if userService.isLoggedIn.value {
-                    print("Logged In! 🤩")
-                    self.launchParty()
-                } else {
-                    print("You broke this somehow... 😖")
-                }
-            })
+            viewModel: self.resolver.resolve(LoginViewModel.self)!
+                .setup(completion: userDidLogIn))
         self.rootNavigationController.present(viewController, animated: true, completion: nil)
     }
     
     func launchScreenViewModelDidLaunchParty(_ source: LaunchScreenViewModel) {
         self.launchParty()
+    }
+    
+    private func userDidLogIn() {
+        let userService: UserServiceProtocol = self.resolver.resolve(UserServiceProtocol.self)!
+        if userService.isLoggedIn.value {
+            print("Logged In!")
+            self.launchParty()
+        } else {
+            print("You broke this somehow...")
+        }
     }
 }

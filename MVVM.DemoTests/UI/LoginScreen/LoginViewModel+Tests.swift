@@ -20,9 +20,13 @@ class LoginViewModel_Test: XCTestCase {
     override func setUp() {
         super.setUp()
         
-        self.mockUserService = MockUserService(isLoggedIn: false)
+        self.mockUserService = getMockUserService()
         
         self.target = LoginViewModel(userService: self.mockUserService)
+    }
+    
+    func getMockUserService() -> MockUserService {
+        return MockUserService(isLoggedIn: false)
     }
 }
 
@@ -37,6 +41,44 @@ class LoginViewModel_when_initialized: LoginViewModel_Test {
     
     func test_canLogIn_is_false() throws {
         XCTAssertEqual(try self.target.canLogIn.toBlocking().first(), false)
+    }
+}
+
+class LoginViewModel_when_setup_is_called_and_user_is_not_logged_in: LoginViewModel_Test {
+    var completionCount: Int = 0
+    var expectedCompletion: (() -> Void)?
+    
+    override func setUp() {
+        super.setUp()
+        self.expectedCompletion = { self.completionCount = self.completionCount + 1 }
+        self.target
+            .setup(completion: self.expectedCompletion)
+            .didLogLogIn.accept(())
+    }
+    
+    override func getMockUserService() -> MockUserService {
+        return MockUserService(isLoggedIn: true)
+    }
+    
+    func test_then_when_didLogIn_is_fired_completion_is_not_called() {
+        XCTAssertEqual(self.completionCount, 1)
+    }
+}
+
+class LoginViewModel_when_setup_is_called_and_user_is_logged_in: LoginViewModel_Test {
+    var completionCount: Int = 0
+    var expectedCompletion: (() -> Void)?
+    
+    override func setUp() {
+        super.setUp()
+        self.expectedCompletion = { self.completionCount = self.completionCount + 1 }
+        self.target
+            .setup(completion: self.expectedCompletion)
+            .didLogLogIn.accept(())
+    }
+    
+    func test_then_when_didLogIn_is_fired_completion_is_not_called() {
+        XCTAssertEqual(self.completionCount, 0)
     }
 }
 
@@ -166,7 +208,7 @@ class LoginViewModel_when_submitLoginInformation_is_called_and_userName_and_pass
     override func setUp() {
         super.setUp()
         
-        self.target.submitLoginInformation()
+        self.target.submitLogInCredentials.accept(())
     }
     
     func test_then_userService_logIn_is_not_called() {
@@ -179,7 +221,7 @@ class LoginViewModel_when_submitLoginInformation_is_called_and_only_userName_is_
         super.setUp()
         self.target.userName.accept("TestUserName")
         
-        self.target.submitLoginInformation()
+        self.target.submitLogInCredentials.accept(())
     }
     
     func test_then_userService_logIn_is_not_called() {
@@ -192,7 +234,7 @@ class LoginViewModel_when_submitLoginInformation_is_called_and_only_password_is_
         super.setUp()
         self.target.password.accept("TestPassword")
         
-        self.target.submitLoginInformation()
+        self.target.submitLogInCredentials.accept(())
     }
     
     func test_then_userService_logIn_is_not_called() {
@@ -210,7 +252,7 @@ class LoginViewModel_when_submitLoginInformation_is_called_and_userName_and_pass
         self.target.userName.accept("TestUserName")
         self.target.password.accept("TestPassword")
         
-        self.target.submitLoginInformation()
+        self.target.submitLogInCredentials.accept(())
     }
     
     override func logInValidation(userName: String, password: String) {

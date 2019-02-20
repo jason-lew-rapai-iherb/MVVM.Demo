@@ -107,14 +107,14 @@ class LaunchScreenViewModel_when_logInOutButtonTapped: LaunchScreenViewModel_Tes
     
     func test_and_userService_isLoggedIn_is_false_then_delegate_launchScreenViewModelDidLaunchLogIn_is_called_once() {
         self.mockUserService.isLoggedInMockValue.accept(false)
-        self.target.logInOutButtonTapped()
+        self.target.logInOutButtonTapped.accept(())
         XCTAssert(self.launchScreenViewModelDidLaunchLogInCallCount == 1)
         XCTAssert(self.userServiceLogOutCallCount == 0)
     }
     
     func test_and_userService_isLoggedIn_is_true_then_userService_called_logout_once() {
         self.mockUserService.isLoggedInMockValue.accept(true)
-        self.target.logInOutButtonTapped()
+        self.target.logInOutButtonTapped.accept(())
         XCTAssert(self.launchScreenViewModelDidLaunchLogInCallCount == 0)
         XCTAssert(self.userServiceLogOutCallCount == 1)
     }
@@ -192,7 +192,7 @@ class LaunchScreenViewModel_when_launchParty_is_called: LaunchScreenViewModel_Te
         
         self.target
             .setup(delegate: self.mockDelegate)
-            .launchParty()
+            .launchParty.accept(())
     }
     
     func test_then_delegate_launchScreenViewModelDidLaunchLogIn_is_called_once() {

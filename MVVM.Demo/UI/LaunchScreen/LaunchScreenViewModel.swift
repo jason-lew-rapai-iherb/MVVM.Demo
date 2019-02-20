@@ -18,8 +18,15 @@ protocol LaunchScreenViewModelDelegate: class {
 class LaunchScreenViewModel {
     private let userService: UserServiceProtocol
     private let partyService: PartyServiceProtocol
+    private let disposeBag: DisposeBag = DisposeBag()
     
     private(set) weak var delegate: LaunchScreenViewModelDelegate?
+    
+    // Inputs
+    let logInOutButtonTapped: PublishRelay<Void>! = PublishRelay()
+    let launchParty: PublishRelay<Void>! = PublishRelay()
+    
+    // Outputs
     
     let logInButtonText: Driver<String>
     
@@ -39,19 +46,29 @@ class LaunchScreenViewModel {
                     : "Faux Login"
             }
             .asDriver(onErrorJustReturn: String.empty)
+        
+        self.logInOutButtonTapped
+            .withLatestFrom(self.userService.isLoggedIn.asObservable())
+            .subscribe(onNext: { isLoggedIn in
+                if isLoggedIn {
+                    self.logUserOut()
+                } else {
+                    self.launchLogIn()
+                }
+            })
+            .disposed(by: self.disposeBag)
+    
+        self.launchParty
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
+                self.delegate?.launchScreenViewModelDidLaunchParty(self)
+            })
+            .disposed(by: self.disposeBag)
     }
     
     func setup(delegate: LaunchScreenViewModelDelegate?) -> Self {
         self.delegate = delegate
         return self
-    }
-    
-    func logInOutButtonTapped() {
-        if self.userService.isLoggedIn.value {
-            logUserOut()
-        } else {
-            launchLogIn()
-        }
     }
     
     func logUserOut() {
@@ -64,9 +81,5 @@ class LaunchScreenViewModel {
     
     func launchLogIn() {
         self.delegate?.launchScreenViewModelDidLaunchLogIn(self)
-    }
-    
-    func launchParty() {
-        self.delegate?.launchScreenViewModelDidLaunchParty(self)
     }
 }
